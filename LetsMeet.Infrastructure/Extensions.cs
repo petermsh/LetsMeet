@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using LetsMeet.Infrastructure.Data;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +14,13 @@ public static class Extensions
         services.AddSwaggerGen();
 
         services.AddControllers();
-        
+
+        services.AddHostedService<DbMigrator>();
+
+        var connectionString = configuration.GetConnectionString("LetsMeetDb");
+        services.AddDbContext<DataContext>(x => x.UseNpgsql(connectionString));
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         return services;
     }
 
