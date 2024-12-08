@@ -1,9 +1,8 @@
-﻿using LetsMeet.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace LetsMeet.Application.Common;
 
 public interface IDataContext
 {
-    DbSet<User> Users { get; }
+    DbSet<Domain.Entities.AppUser> Users { get; }
 }

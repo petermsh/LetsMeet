@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 namespace LetsMeet.Infrastructure.Data;
 
 internal class DataContext(DbContextOptions<DataContext> options)
-    : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options), IDataContext
+    : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>(options), IDataContext
 {
     //public DbSet<Entity> Entities => Set<Entity>();
 

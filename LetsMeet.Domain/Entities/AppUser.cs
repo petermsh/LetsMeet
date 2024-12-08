@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LetsMeet.Domain.Entities;
 
-public class User : IdentityUser<Guid>, IAuditable
+public class AppUser : IdentityUser<Guid>, IAuditable
 {
     public required int Age { get; set; }
     public Gender Gender { get; set; }

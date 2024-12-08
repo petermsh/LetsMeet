@@ -1,10 +1,19 @@
-﻿using LetsMeet.Infrastructure.Data;
+﻿using System.Text;
+using LetsMeet.Application.Common;
+using LetsMeet.Domain.Entities;
+using LetsMeet.Infrastructure.Data;
 using LetsMeet.Infrastructure.Data.Tools;
+using LetsMeet.Infrastructure.Options;
+using LetsMeet.Infrastructure.Services.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace LetsMeet.Infrastructure;
 
@@ -14,10 +23,14 @@ public static class Extensions
     {
         services.AddSingleton(TimeProvider.System);
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-
         services.AddControllers();
-        services.SetUpDatabase(configuration);
+
+        services
+            .SetUpDatabase(configuration)
+            .SetUpUserAndAuth(configuration)
+            .SetUpSwagger();
+
+        services.AddScoped<ITokenService, TokenService>();
 
         return services;
     }
@@ -26,8 +39,11 @@ public static class Extensions
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-
         app.MapControllers();
+        
+        app
+            .UseAuthentication()
+            .UseAuthorization();
 
         return app;
     }
@@ -35,7 +51,7 @@ public static class Extensions
     private static IServiceCollection SetUpDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHostedService<DbMigrator>()
-            .AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+            .AddTransient<ISaveChangesInterceptor, AuditableEntityInterceptor>();
 
         var connectionString = configuration.GetConnectionString("LetsMeetDb");
         services.AddDbContext<DataContext>((sp, options) =>
@@ -44,6 +60,81 @@ public static class Extensions
             options.UseNpgsql(connectionString);
         });
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+        services.AddScoped<IDataContext>(provider => provider.GetRequiredService<DataContext>());
+
+        return services;
+    }
+
+    private static IServiceCollection SetUpUserAndAuth(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddIdentity<AppUser, IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<DataContext>()
+            .AddDefaultTokenProviders();
+
+        var jwtOption = configuration.GetSection("JWT").Get<JwtSettings>();
+        services.AddSingleton(jwtOption);
+
+        services
+            .AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opts =>
+            {
+                opts.RequireHttpsMetadata = false;
+                opts.SaveToken = true;
+                opts.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOption.SecretKey)),
+                    ValidIssuer = jwtOption.Issuer,
+                    ValidateLifetime = true,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.FromMinutes(1)
+                };
+            });
+
+        services.AddAuthorization();
+
+        return services;
+    }
+
+    private static IServiceCollection SetUpSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(c =>
+        {
+            c.EnableAnnotations();
+
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme."
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+        });
+
+        //services.AddFluentValidationRulesToSwagger();
+        services.AddEndpointsApiExplorer();
 
         return services;
     }

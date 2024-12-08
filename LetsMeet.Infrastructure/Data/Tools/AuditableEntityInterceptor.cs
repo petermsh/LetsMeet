@@ -6,17 +6,17 @@ namespace LetsMeet.Infrastructure.Data.Tools;
 
 internal class AuditableEntityInterceptor(TimeProvider timeProvider) : SaveChangesInterceptor
 {
-    public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
+    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
         UpdateAuditableEntities(eventData.Context);
-        return base.SavedChanges(eventData, result);
+        return base.SavingChanges(eventData, result);
     }
 
-    public override ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result,
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result,
         CancellationToken cancellationToken = new CancellationToken())
     {
         UpdateAuditableEntities(eventData.Context);
-        return base.SavedChangesAsync(eventData, result, cancellationToken);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
     private void UpdateAuditableEntities(DbContext? context)
@@ -26,7 +26,8 @@ internal class AuditableEntityInterceptor(TimeProvider timeProvider) : SaveChang
         var utcNow = timeProvider.GetUtcNow();
 
         var auditableEntities = context.ChangeTracker.Entries()
-            .Where(x => x is { Entity: IAuditable, State: EntityState.Added or EntityState.Modified });
+            .Where(x => x is { Entity: IAuditable, State: EntityState.Added or EntityState.Modified })
+            .ToList();
 
         foreach (var entry in auditableEntities)
         {
