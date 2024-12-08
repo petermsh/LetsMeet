@@ -1,12 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using LetsMeet.Application.Common;
+using LetsMeet.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace LetsMeet.Infrastructure.Data;
 
-internal class DataContext(DbContextOptions<DataContext> options) : DbContext(options), IDataContext
+internal class DataContext(DbContextOptions<DataContext> options)
+    : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options), IDataContext
 {
-    //public DbSet<User> Users => Set<User>();
+    //public DbSet<Entity> Entities => Set<Entity>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
