@@ -1,4 +1,5 @@
-﻿using LetsMeet.Application.Common;
+﻿using LetsMeet.Application.Common.Exceptions.AppExceptions;
+using LetsMeet.Application.Common.Interfaces;
 using LetsMeet.Domain.Entities;
 using LetsMeet.Domain.Enums;
 using MediatR;
@@ -26,13 +27,13 @@ public class RegisterUserCommandHandler(IDataContext context, UserManager<AppUse
 
         if (context.Users.Any(u => u.NormalizedUserName == user.UserName.ToUpper()))
         {
-            throw new Exception("UserName already taken"); //todo: change to app exception
+            throw new UserNameAlreadyTakenException(request.UserName);
         }
 
         var result = await userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
-            throw new Exception("Could not register user");
+            throw new ErrorsOccuredException("Problem with creating an user");
         }
     }
 }

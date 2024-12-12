@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using LetsMeet.Application.Common;
+using LetsMeet.Application.Common.Interfaces;
 using LetsMeet.Domain.Entities;
 using LetsMeet.Infrastructure.Options;
 using Microsoft.IdentityModel.Tokens;

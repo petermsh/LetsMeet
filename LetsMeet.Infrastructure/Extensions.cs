@@ -1,5 +1,6 @@
 ﻿using System.Text;
-using LetsMeet.Application.Common;
+using System.Text.Json.Serialization;
+using LetsMeet.Application.Common.Interfaces;
 using LetsMeet.Domain.Entities;
 using LetsMeet.Infrastructure.Data;
 using LetsMeet.Infrastructure.Data.Tools;
@@ -21,6 +22,8 @@ public static class Extensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddExceptionHandler<AppExceptionHandler>();
+
         services.AddSingleton(TimeProvider.System);
         services.AddEndpointsApiExplorer();
         services.AddControllers();
@@ -37,6 +40,8 @@ public static class Extensions
 
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
+        app.UseExceptionHandler(opt => {});
+
         app.UseSwagger();
         app.UseSwaggerUI();
         app.MapControllers();
@@ -135,6 +140,10 @@ public static class Extensions
 
         //services.AddFluentValidationRulesToSwagger();
         services.AddEndpointsApiExplorer();
+
+        services.ConfigureHttpJsonOptions(opt => opt.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+        services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(opt =>
+            opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         return services;
     }

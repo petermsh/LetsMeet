@@ -1,4 +1,5 @@
-﻿using LetsMeet.Application.Common;
+﻿using LetsMeet.Application.Common.Exceptions.AppExceptions;
+using LetsMeet.Application.Common.Interfaces;
 using LetsMeet.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -17,12 +18,12 @@ public class LoginUserCommandHandler(IDataContext context, SignInManager<AppUser
     {
         var user = await context.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == request.UserName.ToUpper(),
                        cancellationToken)
-                   ?? throw new Exception("User not found"); //todo
+                   ?? throw new UserNotFoundException(request.UserName);
 
         var loginResult = await signInManager.CheckPasswordSignInAsync(user, request.Password, false);
         if (!loginResult.Succeeded)
         {
-            throw new Exception("Invalid login data");
+            throw new UnauthorizedAccessException();
         }
 
         return new LoginUserCommand.Result(tokenService.CreateAccessToken(user));
