@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace LetsMeet.Application.User.Commands;
+namespace LetsMeet.Application.User.Commands.LoginUser;
 
 public record LoginUserCommand(string UserName, string Password) : IRequest<LoginUserCommand.Result>
 {

@@ -7,17 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
       <PackageReference Include="MediatR" Version="12.4.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\LetsMeet.Domain\LetsMeet.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="User\Queries\" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using LetsMeet.Application.User.Commands;
+﻿using LetsMeet.Application.User.Commands.LoginUser;
+using LetsMeet.Application.User.Commands.RegisterUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
