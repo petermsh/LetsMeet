@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using LetsMeet.Application.User.Queries.GetUserInfo;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,7 @@ public class UserController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetUserInfo()
     {
-        //todo
-        return Ok();
+        var result = await sender.Send(new GetUserInfoQuery());
+        return Ok(result);
     }
 }
