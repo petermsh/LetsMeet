@@ -1,4 +1,6 @@
-﻿using LetsMeet.Application.User.Queries.GetUserInfo;
+﻿using LetsMeet.Application.User.Commands.ChangeStatus;
+using LetsMeet.Application.User.Queries.GetUserInfo;
+using LetsMeet.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,5 +20,16 @@ public class UserController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new GetUserInfoQuery());
         return Ok(result);
+    }
+
+    [HttpPatch]
+    [Authorize]
+    [EndpointSummary("Change user status")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ChangeStatus(AppUser user, bool status)
+    {
+        await sender.Send(new ChangeStatusCommand(user, status));
+        return NoContent();
     }
 }

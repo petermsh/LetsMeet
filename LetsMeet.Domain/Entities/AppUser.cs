@@ -12,6 +12,8 @@ public class AppUser : IdentityUser<Guid>, IAuditable
     public required string City { get; set; }
     public string? University { get; set; }
     public string? Major { get; set; }
+    
+    public bool? Status { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset ModifiedAt { get; set; }

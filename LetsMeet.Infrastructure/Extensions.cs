@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
 using LetsMeet.Application.Common.Interfaces;
+using LetsMeet.Application.Hubs;
 using LetsMeet.Domain.Entities;
 using LetsMeet.Infrastructure.Data;
 using LetsMeet.Infrastructure.Data.Tools;
@@ -27,6 +28,11 @@ public static class Extensions
         services.AddSingleton(TimeProvider.System);
         services.AddEndpointsApiExplorer();
         services.AddControllers();
+        
+        services.AddSignalR(options =>
+        {
+            options.EnableDetailedErrors = true;
+        });
 
         services
             .SetUpDatabase(configuration)
@@ -45,6 +51,8 @@ public static class Extensions
         app.UseSwagger();
         app.UseSwaggerUI();
         app.MapControllers();
+
+        app.MapHub<ChatHub>("/chat");
         
         app
             .UseAuthentication()
@@ -65,7 +73,7 @@ public static class Extensions
             options.UseNpgsql(connectionString);
         });
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
+        
         services.AddScoped<IDataContext>(provider => provider.GetRequiredService<DataContext>());
 
         return services;
