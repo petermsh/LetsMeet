@@ -58,6 +58,13 @@ public static class Extensions
             .UseAuthentication()
             .UseAuthorization();
 
+        app.UseCors(cp =>
+        {
+            cp.AllowAnyOrigin();
+            cp.AllowAnyHeader();
+            cp.AllowAnyMethod();
+        });
+
         return app;
     }
 
