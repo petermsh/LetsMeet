@@ -9,7 +9,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
-import { provideHttpClient, withFetch} from '@angular/common/http';
+import { provideHttpClient, withFetch, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { JwtInterceptorService } from './authorization/jwt-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { provideHttpClient, withFetch} from '@angular/common/http';
   ],
   providers: [
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch()),
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true }
   ],
   bootstrap: [AppComponent]
 })
