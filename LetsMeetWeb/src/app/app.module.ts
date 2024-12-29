@@ -9,8 +9,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
-import { provideHttpClient, withFetch, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  HTTP_INTERCEPTORS,
+  withInterceptors,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { JwtInterceptorService } from './authorization/jwt-interceptor.service';
+import { RoomsComponent } from './rooms/rooms.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +25,8 @@ import { JwtInterceptorService } from './authorization/jwt-interceptor.service';
     MessagesComponent,
     HomeComponent,
     LoginComponent,
-    HeaderComponent
+    HeaderComponent,
+    RoomsComponent
   ],
   imports: [
     BrowserModule,
@@ -33,9 +41,8 @@ import { JwtInterceptorService } from './authorization/jwt-interceptor.service';
     ReactiveFormsModule
   ],
   providers: [
-    provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch()),
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
+    provideHttpClient(withFetch(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
 })

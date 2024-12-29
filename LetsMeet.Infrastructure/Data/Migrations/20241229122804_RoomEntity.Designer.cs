@@ -3,6 +3,7 @@ using System;
 using LetsMeet.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LetsMeet.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241229122804_RoomEntity")]
+    partial class RoomEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,21 +25,6 @@ namespace LetsMeet.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("AppUserRoom", b =>
-                {
-                    b.Property<string>("RoomsId")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("RoomsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("AppUserRoom", "LetsMeet");
-                });
 
             modelBuilder.Entity("LetsMeet.Domain.Entities.AppUser", b =>
                 {
@@ -103,6 +91,9 @@ namespace LetsMeet.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("RoomId")
+                        .HasColumnType("text");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -127,6 +118,8 @@ namespace LetsMeet.Infrastructure.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("AspNetUsers", "LetsMeet");
                 });
@@ -284,19 +277,11 @@ namespace LetsMeet.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", "LetsMeet");
                 });
 
-            modelBuilder.Entity("AppUserRoom", b =>
+            modelBuilder.Entity("LetsMeet.Domain.Entities.AppUser", b =>
                 {
                     b.HasOne("LetsMeet.Domain.Entities.Room", null)
-                        .WithMany()
-                        .HasForeignKey("RoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LetsMeet.Domain.Entities.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Users")
+                        .HasForeignKey("RoomId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -348,6 +333,11 @@ namespace LetsMeet.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LetsMeet.Domain.Entities.Room", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

@@ -25,6 +25,8 @@ public static class Extensions
     {
         services.AddExceptionHandler<AppExceptionHandler>();
 
+        services.AddCors();
+        
         services.AddSingleton(TimeProvider.System);
         services.AddEndpointsApiExplorer();
         services.AddControllers();
@@ -48,6 +50,14 @@ public static class Extensions
     {
         app.UseExceptionHandler(opt => {});
 
+        app.UseCors(cp =>
+        {
+            cp.WithOrigins("http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
+        
         app.UseSwagger();
         app.UseSwaggerUI();
         app.MapControllers();
@@ -57,13 +67,6 @@ public static class Extensions
         app
             .UseAuthentication()
             .UseAuthorization();
-
-        app.UseCors(cp =>
-        {
-            cp.AllowAnyOrigin();
-            cp.AllowAnyHeader();
-            cp.AllowAnyMethod();
-        });
 
         return app;
     }
