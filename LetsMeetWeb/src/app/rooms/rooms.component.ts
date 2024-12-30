@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { RoomsService } from './rooms.service';
+import {MessagesService} from '../messages/messages.service';
+import {MessageDto} from '../messages/messageDto';
 
 @Component({
   selector: 'app-rooms',
@@ -9,10 +11,11 @@ import { RoomsService } from './rooms.service';
   styleUrl: './rooms.component.css'
 })
 export class RoomsComponent implements OnInit {
-
   rooms: any[] = [];
+  selectedRoom: any = null;
+  messages: MessageDto[] = [];
 
-  constructor(private roomsService: RoomsService) {}
+  constructor(private roomsService: RoomsService, private messagesService: MessagesService) {}
 
   ngOnInit() {
     this.roomsService.getRooms()
@@ -22,5 +25,17 @@ export class RoomsComponent implements OnInit {
           this.rooms = rooms
         }
       });
+  }
+  selectRoom(room: any) {
+    this.selectedRoom = room;
+    this.messagesService.getMessages(room.roomId).subscribe({
+      next: messages => {
+        this.messages = messages;
+        console.log('messages: ', this.messages);
+      },
+      error: err => {
+        console.error('Error fetching messages: ', err);
+      }
+    });
   }
 }

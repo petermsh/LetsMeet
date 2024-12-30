@@ -1,11 +1,31 @@
 <div class="container">
   <h4>Wiadomości</h4>
   <div class="row">
-    <div class="col-sm-8">
+    <!-- Lista pokoi -->
+    <div class="col-sm-4">
       <div class="list-group">
-        <div *ngFor="let room of rooms" class="list-group-item list-group-item-action mb-0">
+        <div
+          *ngFor="let room of rooms"
+          class="list-group-item list-group-item-action mb-0"
+          (click)="selectRoom(room)">
           <h5 class="mb-1">{{ room.roomName }}</h5>
           <p class="mb-1">{{ room.lastMessage }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wiadomości dla wybranego pokoju -->
+    <div class="col-sm-8 chat-box" *ngIf="selectedRoom">
+      <h5>Wiadomości dla: {{ selectedRoom.roomName }}</h5>
+      <div class="messages-container">
+        <div
+          class="message-item"
+          *ngFor="let message of messages"
+          [ngClass]="{ 'from-user': message.isFromUser, 'to-user': !message.isFromUser }">
+          <div class="message-content">
+            <p>{{ message.content }}</p>
+            <span class="message-timestamp">{{ message.date | date:'short' }}</span>
+          </div>
         </div>
       </div>
     </div>

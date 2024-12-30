@@ -28,7 +28,7 @@ public class MessagesController(ISender sender) : ControllerBase
     [EndpointSummary("Get messages from room")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetRooms([FromQuery] string roomId)
+    public async Task<IActionResult> GetMessages([FromQuery] string roomId)
     {
         var result = await sender.Send(new GetMessagesFromRoomQuery(roomId));
         return Ok(result);
