@@ -13,6 +13,7 @@ public class Room : IAuditable
     public DateTimeOffset ModifiedAt { get; set; }
     
     public ICollection<AppUser> Users { get; set; }
+    public ICollection<Message> Messages { get; set; }
 
     public Room()
     {

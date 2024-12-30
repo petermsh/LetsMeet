@@ -21,7 +21,7 @@ public class GetRoomsQueryHandler(ICurrentUser currentUser, IDataContext context
             {
                 RoomId = x.Id,
                 RoomName = x.Users.FirstOrDefault(u => u.Id != id).UserName,
-                LastMessage = "wiadomość"
+                LastMessage = x.Messages.OrderByDescending(x=>x.CreatedAt).FirstOrDefault().Content
             })
             .ToListAsync(cancellationToken);
 

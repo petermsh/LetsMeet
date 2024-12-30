@@ -14,6 +14,7 @@ internal class DataContext(DbContextOptions<DataContext> options)
     //public DbSet<Entity> Entities => Set<Entity>();
 
     public DbSet<Room> Rooms => Set<Room>();
+    public DbSet<Message> Messages => Set<Message>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
