@@ -117,6 +117,20 @@ public static class Extensions
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.FromMinutes(1)
                 };
+
+                opts.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Query["access_token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            context.Token = token;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         services.AddAuthorization();
