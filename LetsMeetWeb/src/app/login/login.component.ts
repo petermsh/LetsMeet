@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {AuthorizationService} from '../authorization/authorization.service';
+import {HubClientService} from '../hub/hub-client.service';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +12,10 @@ export class LoginComponent {
   userName: any;
   password: any;
 
-  constructor(private authorizationService: AuthorizationService) {
+  constructor(private authorizationService: AuthorizationService, private hubClientService: HubClientService) {
   }
 
-  login() {
-    this.authorizationService.login(this.userName, this.password);
+  async login() {
+    await this.authorizationService.login(this.userName, this.password);
   }
 }

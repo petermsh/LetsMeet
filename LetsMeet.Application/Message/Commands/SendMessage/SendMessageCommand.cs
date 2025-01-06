@@ -10,7 +10,7 @@ namespace LetsMeet.Application.Message.Commands.SendMessage;
 
 public record SendMessageCommand(string RoomId, string Content): IRequest<SendMessageCommand.Result>
 {
-    public record Result(string Content);
+    public record Result(SendMessageDto Message);
 }
 
 public class SendMessageHandler(IDataContext context, ICurrentUser currentUser, IHubContext<ChatHub> hubContext) : IRequestHandler<SendMessageCommand, SendMessageCommand.Result>
@@ -40,6 +40,6 @@ public class SendMessageHandler(IDataContext context, ICurrentUser currentUser, 
         await context.Messages.AddAsync(message, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return new SendMessageCommand.Result(message.Content);
+        return new SendMessageCommand.Result(sendMessage);
     }
 }

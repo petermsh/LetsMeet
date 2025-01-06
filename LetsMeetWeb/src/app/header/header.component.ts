@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { AuthorizationService } from '../authorization/authorization.service';
+import {HubClientService} from '../hub/hub-client.service';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,10 @@ export class HeaderComponent {
     this.logout.emit();
   }
 
-  constructor(private authorizationService: AuthorizationService) {
+  async startConnection() {
+    await this.hubClientService.startConnection();
+  }
+
+  constructor(private authorizationService: AuthorizationService, private hubClientService: HubClientService) {
   }
 }

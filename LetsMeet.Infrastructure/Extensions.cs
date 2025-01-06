@@ -49,7 +49,7 @@ public static class Extensions
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
         app.UseExceptionHandler(opt => {});
-
+        
         app.UseCors(cp =>
         {
             cp.WithOrigins("http://localhost:4200")
@@ -58,11 +58,11 @@ public static class Extensions
                 .AllowCredentials();
         });
         
+        app.MapHub<ChatHub>("/chat");
+        
         app.UseSwagger();
         app.UseSwaggerUI();
         app.MapControllers();
-
-        app.MapHub<ChatHub>("/chat");
         
         app
             .UseAuthentication()

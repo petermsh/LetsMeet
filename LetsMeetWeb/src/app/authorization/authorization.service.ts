@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/enviroment.development';
+import {HubClientService} from '../hub/hub-client.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class AuthorizationService {
     return null;
   }
 
-  login(userName: any, password: any) {
+  async login(userName: any, password: any) {
     this.httpClient.post(`${environment.apiUrl}/Auth/login`, { userName, password })
       .subscribe({
         next: response => {
@@ -33,6 +34,7 @@ export class AuthorizationService {
         },
         error: error => console.error(error)
       });
+    console.log("login");
   }
 
   logout() {
@@ -52,7 +54,7 @@ export class AuthorizationService {
     }
   }
 
-  constructor(private router: Router, private httpClient: HttpClient) {
+  constructor(private router: Router, private httpClient: HttpClient, private hubClientService: HubClientService) {
     if (this.isLocalStorageAvailable()) {
       const user = localStorage.getItem('currentUser');
       if (user) {

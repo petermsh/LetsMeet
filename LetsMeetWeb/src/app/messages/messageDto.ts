@@ -1,7 +1,8 @@
 ﻿export interface MessageDto {
-  id: string;
+  id?: string;
+  roomId: string;
   content: string;
-  date: Date;
-  from: string;
-  isFromUser: boolean;
+  date?: string;
+  from?: string;
+  isFromUser?: boolean;
 }

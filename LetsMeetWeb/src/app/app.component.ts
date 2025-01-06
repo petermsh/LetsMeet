@@ -8,7 +8,6 @@ import { AuthorizationService } from './authorization/authorization.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'LetsMeetWeb';
 
   get isLoggedIn() {
     return this.authorizationService.isLoggedIn;

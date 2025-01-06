@@ -16,6 +16,7 @@
 
     <!-- Wiadomości dla wybranego pokoju -->
     <div class="col-sm-8 chat-box" *ngIf="selectedRoom">
+
       <h5>Wiadomości dla: {{ selectedRoom.roomName }}</h5>
       <div class="messages-container">
         <div
@@ -28,6 +29,20 @@
           </div>
         </div>
       </div>
+
+      <form (submit)="sendMessage()" class="message-form">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newMessage"
+            placeholder="Type a message..."
+            name="message"
+            required>
+          <button class="btn btn-primary" type="submit">Send</button>
+        </div>
+      </form>
+
     </div>
   </div>
 </div>

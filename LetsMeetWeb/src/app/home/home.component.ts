@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {AuthorizationService} from '../authorization/authorization.service';
+import {HubClientService} from '../hub/hub-client.service';
 
 @Component({
   selector: 'app-home',
@@ -8,5 +10,10 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  constructor(private hubClientService: HubClientService) {
+    console.log("start");
+    this.hubClientService.startConnection();
+    console.log("stop");
+  }
 
 }
