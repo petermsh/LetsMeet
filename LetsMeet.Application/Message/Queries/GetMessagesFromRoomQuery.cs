@@ -19,6 +19,6 @@ public class GetMessagesFromRoomQueryHandler(ICurrentUser currentUser, IDataCont
                 Content = q.Content,
                 Date = q.CreatedAt,
                 IsFromUser = currentUser.UserName == q.SenderUserName
-            }).OrderBy(m => m.Date).ToListAsync(cancellationToken);
+            }).OrderByDescending(m => m.Date).ToListAsync(cancellationToken);
     }
 }
