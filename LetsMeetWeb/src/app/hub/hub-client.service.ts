@@ -2,6 +2,7 @@
 import * as signalR from '@microsoft/signalR';
 import {Observable, Subject} from 'rxjs';
 import {HubConnection, HubConnectionBuilder, IHttpConnectionOptions} from '@microsoft/signalR';
+import {MessageDto} from '../messages/messageDto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,9 @@ export class HubClientService {
     transport: signalR.HttpTransportType.WebSockets
   };
   private hubConnection: signalR.HubConnection | null = null;
-  private messageSubject = new Subject<any>();
+
+  private messageReceivedSubject = new Subject<MessageDto>();
+  public messageReceived$ = this.messageReceivedSubject.asObservable();
 
   constructor() {
   }
@@ -25,13 +28,14 @@ export class HubClientService {
       .configureLogging(signalR.LogLevel.Debug)
       .build();
 
-    this.registerReceiveMessageHandler();
+    this.hubConnection.on('ReceiveMessage', (message: MessageDto) => {
+      this.messageReceivedSubject.next(message);
+    });
 
     this.hubConnection
         .start()
         .then(() => {
           console.log('Connection established with SignalR hub');
-          this.registerReceiveMessageHandler();
         })
         .catch((error) => {
           console.error('Error connecting to SignalR hub:', error);
@@ -72,21 +76,6 @@ export class HubClientService {
     });
   }
 
-  public receiveMessage(): Observable<any> {
-    return this.messageSubject.asObservable();
-  }
-
-  private registerReceiveMessageHandler(): void {
-    if (this.hubConnection) {
-      this.hubConnection.on('ReceiveMessage', (message) => {
-        console.log('Message received:', message);
-        this.messageSubject.next(message);
-      });
-    } else {
-      console.error('HubConnection not initialized');
-    }
-  }
-
   private isLocalStorageAvailable(): boolean {
     try {
       return typeof window !== 'undefined' && 'localStorage' in window && window.localStorage !== null;
@@ -102,7 +91,6 @@ export class HubClientService {
         if (storedUser) {
           try {
             const parsedUser = JSON.parse(storedUser);
-            console.log("token: ", parsedUser.accessToken);
             return parsedUser.accessToken || '';
           } catch (error) {
             console.error("Failed to parse 'currentUser':", error);

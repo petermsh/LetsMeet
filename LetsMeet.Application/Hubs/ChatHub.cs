@@ -2,6 +2,7 @@
 using LetsMeet.Application.Common.Interfaces;
 using LetsMeet.Application.Hubs.Dto;
 using LetsMeet.Application.Message.Commands.SendMessage;
+using LetsMeet.Application.Message.Dtos;
 using LetsMeet.Application.User.Commands.ChangeStatus;
 using LetsMeet.Domain.Entities;
 using LetsMeet.Application.Room.Exceptions;
@@ -42,7 +43,11 @@ public class ChatHub(UserManager<AppUser> userManager, ISender sender, ICurrentU
             throw new RoomNotFoundException(roomDto.RoomId);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, roomDto.RoomId);
-        await Clients.Group(roomDto.RoomId).SendAsync("ReceiveMessage", $"{currentUser.UserName} has joined the room.");
+        await Clients.Group(roomDto.RoomId).SendAsync("ReceiveMessage", new SendMessageDto()
+            {
+                Content = $"{currentUser.UserName} has joined the room.",
+                RoomId = roomDto.RoomId
+            });
     }
 
     public async Task LeaveRoom(string roomId)
@@ -53,7 +58,12 @@ public class ChatHub(UserManager<AppUser> userManager, ISender sender, ICurrentU
             throw new RoomNotFoundException(roomId);
         
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId);
-        await Clients.Group(roomId).SendAsync("ReceiveMessage", $"{currentUser.UserName} has left the room.");
+        await Clients.Group(roomId).SendAsync("ReceiveMessage",
+            new SendMessageDto()
+            {
+                Content = $"{currentUser.UserName} has left the room.",
+                RoomId = roomId
+            });
     }
 
     public async Task SendMessage(SendMessageCommand sendMessage)
@@ -63,7 +73,15 @@ public class ChatHub(UserManager<AppUser> userManager, ISender sender, ICurrentU
         
         var result = await sender.Send(new SendMessageCommand(sendMessage.RoomId, sendMessage.Content));
     
-        await Clients.Group(sendMessage.RoomId).SendAsync("ReceiveMessage", result.Message.Content);
+        var messageDto = new SendMessageDto()
+        {
+            RoomId = result.Message.RoomId,
+            Content = result.Message.Content,
+            Date = DateTime.UtcNow.ToString("o"),
+            From = user.UserName
+        };
+        
+        await Clients.Group(sendMessage.RoomId).SendAsync("ReceiveMessage", messageDto);
     }
     
 }
