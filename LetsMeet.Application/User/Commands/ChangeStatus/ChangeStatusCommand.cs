@@ -3,18 +3,23 @@ using LetsMeet.Application.Common.Interfaces;
 using LetsMeet.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LetsMeet.Application.User.Commands.ChangeStatus;
 
-public record ChangeStatusCommand(AppUser user, bool status): IRequest;
+public record ChangeStatusCommand(bool Status): IRequest;
 
-public class ChangeStatusCommandHandler(IDataContext context, UserManager<AppUser> userManager) : IRequestHandler<ChangeStatusCommand>
+public class ChangeStatusCommandHandler(ICurrentUser currentUser, IDataContext context, UserManager<AppUser> userManager) : IRequestHandler<ChangeStatusCommand>
 {
     public async Task Handle(ChangeStatusCommand request, CancellationToken cancellationToken)
     {
-        request.user.Status = request.status;
+        var id = currentUser.Id ?? throw new UserNotFoundException("");
 
-        var result = await userManager.UpdateAsync(request.user);
+        var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken: cancellationToken)
+                   ?? throw new UserNotFoundException(id.ToString());
+        user.Status = request.Status;
+        
+        var result = await userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
             throw new ErrorsOccuredException("Problem with status changing");

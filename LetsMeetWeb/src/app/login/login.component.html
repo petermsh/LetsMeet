@@ -1,10 +1,10 @@
 <div class="login">
   <form class="form-signin">
-    <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
-    <input type="userName" id="inputEmail" class="form-control" placeholder="Username" name="userName"
+    <img src="/logo.png" alt="logo">
+    <input type="userName" id="inputEmail" class="form-control" placeholder="Login" name="userName"
            [(ngModel)]="userName" required autofocus>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password"
+    <input type="password" id="inputPassword" class="form-control" placeholder="Hasło" name="password"
            [(ngModel)]="password" required autofocus>
-    <button class="btn btn-primary w-100" type="submit" (click)="login()">Log in</button>
+    <button class="btn btn-primary w-100" type="submit" (click)="login()">Zaloguj się</button>
   </form>
 </div>

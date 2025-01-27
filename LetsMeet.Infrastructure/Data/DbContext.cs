@@ -27,27 +27,4 @@ internal class DataContext(DbContextOptions<DataContext> options)
 
         base.OnModelCreating(builder);
     }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-    {
-        UpdateTimestamps();
-        return base.SaveChangesAsync(cancellationToken);
-    }
-    
-    private void UpdateTimestamps()
-    {
-        foreach (var entry in ChangeTracker.Entries<IAuditable>())
-        {
-            var entity = entry.Entity;
-            if (entry.State == EntityState.Added)
-            {
-                entity.CreatedAt = DateTimeOffset.UtcNow;
-                entity.ModifiedAt = DateTimeOffset.UtcNow;
-            }
-            else if (entry.State == EntityState.Modified)
-            {
-                entity.ModifiedAt = DateTimeOffset.UtcNow;
-            }
-        }
-    }
 }

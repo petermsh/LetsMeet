@@ -27,9 +27,9 @@ public class UserController(ISender sender) : ControllerBase
     [EndpointSummary("Change user status")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ChangeStatus(AppUser user, bool status)
+    public async Task<IActionResult> ChangeStatus(bool status)
     {
-        await sender.Send(new ChangeStatusCommand(user, status));
+        await sender.Send(new ChangeStatusCommand(status));
         return NoContent();
     }
 }

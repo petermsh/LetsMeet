@@ -44,6 +44,13 @@ export class RoomsComponent implements OnInit {
               }
             }
           );
+          this.roomsService.getRooms()
+            .subscribe({
+              next: rooms => {
+                console.log("rooms", this.rooms);
+                this.rooms = rooms
+              }
+            });
         }
       }
     );
@@ -72,6 +79,35 @@ export class RoomsComponent implements OnInit {
           error: err => console.error('Error sending message:', err)
         });
       this.newMessage = '';
+    }
+  }
+
+  formatRoomDate(date: string): string {
+    const now = new Date();
+    const messageDate = new Date(date);
+
+    const isToday =
+      messageDate.getDate() === now.getDate() &&
+      messageDate.getMonth() === now.getMonth() &&
+      messageDate.getFullYear() === now.getFullYear();
+
+    const isYesterday =
+      messageDate.getDate() === now.getDate() - 1 &&
+      messageDate.getMonth() === now.getMonth() &&
+      messageDate.getFullYear() === now.getFullYear();
+
+    if (isToday) {
+      return messageDate.toLocaleTimeString('pl-PL', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } else if (isYesterday) {
+      return 'Wczoraj';
+    } else {
+      return messageDate.toLocaleDateString('pl-PL', {
+        day: '2-digit',
+        month: '2-digit',
+      });
     }
   }
 }

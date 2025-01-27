@@ -23,7 +23,7 @@ public class ChatHub(UserManager<AppUser> userManager, ISender sender, ICurrentU
         var user = await userManager.Users.SingleOrDefaultAsync(x => x.UserName == currentUser.UserName) 
                    ?? throw new UserNotFoundException("");
 
-        await sender.Send(new ChangeStatusCommand(user, true));
+        await sender.Send(new ChangeStatusCommand(true));
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -31,7 +31,7 @@ public class ChatHub(UserManager<AppUser> userManager, ISender sender, ICurrentU
         var user = await userManager.Users.SingleOrDefaultAsync(x => x.UserName == currentUser.UserName) 
                    ?? throw new UserNotFoundException("");
 
-        await sender.Send(new ChangeStatusCommand(user, false));
+        await sender.Send(new ChangeStatusCommand(false));
     }
     
     public async Task JoinRoom(JoinRoomDto roomDto)

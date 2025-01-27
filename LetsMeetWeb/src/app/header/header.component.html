@@ -1,11 +1,13 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
   <div class="container-fluid">
-    <a class="navbar-brand" [routerLink]="['/home']">LetsMeet</a>
+    <a class="navbar-brand" [routerLink]="['/home']">
+      <img src="/logo.png" alt="logo" width="40%" height="40%">
+    </a>
     <div *ngIf="!isLoggedIn">
-      <a class="nav-link" [routerLink]="['/login']">Login</a>
+      <a class="nav-link" [routerLink]="['/login']">Zaloguj się</a>
     </div>
     <div *ngIf="isLoggedIn">
-      <a class="nav-link" (click)="onLogoutClicked()">Logout</a>
+      <a class="nav-link" (click)="onLogoutClicked()">Wyloguj się</a>
     </div>
   </div>
 </nav>
