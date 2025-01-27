@@ -1,4 +1,5 @@
 ﻿using LetsMeet.Application.User.Commands.ChangeStatus;
+using LetsMeet.Application.User.Commands.UpdateUser;
 using LetsMeet.Application.User.Queries.GetUserInfo;
 using LetsMeet.Domain.Entities;
 using MediatR;
@@ -30,6 +31,18 @@ public class UserController(ISender sender) : ControllerBase
     public async Task<IActionResult> ChangeStatus(AppUser user, bool status)
     {
         await sender.Send(new ChangeStatusCommand(user, status));
+        return NoContent();
+    }
+
+    [HttpPatch("info")]
+    [Authorize]
+    [EndpointSummary("Update user info")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserCommand command)
+    {
+        await sender.Send(command);
         return NoContent();
     }
 }
