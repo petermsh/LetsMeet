@@ -47,7 +47,6 @@ export class HubClientService {
     {
       await this.hubConnection.invoke('JoinRoom', roomId)
         .then(() => {
-          console.log(`Joined room: ${roomId}`);
         })
         .catch(err => console.error(err));
     }
@@ -58,7 +57,6 @@ export class HubClientService {
       if(this.hubConnection != null) {
         this.hubConnection.invoke('LeaveRoom', roomId)
           .then(() => {
-            console.log(`Left room: ${roomId}`);
             observer.complete();
           })
           .catch(err => observer.error(err));
@@ -99,6 +97,27 @@ export class HubClientService {
       }
     return 'error';
   }
+
+  public getConnectionId(): Observable<string> {
+    return new Observable<string>((observer) => {
+      if (this.hubConnection != null) {
+        this.hubConnection.invoke<string>('GetConnectionId')
+          .then((connectionId) => {
+            observer.next(connectionId);
+            observer.complete();
+          })
+          .catch((error) => {
+            console.error('Error fetching connectionId:', error);
+            observer.error(error);
+          });
+      } else {
+        const error = new Error('Hub connection is not initialized.');
+        console.error(error.message);
+        observer.error(error);
+      }
+    });
+  }
+
 }
 
 

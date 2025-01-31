@@ -1,6 +1,7 @@
 ﻿using LetsMeet.Application.Common.Exceptions.AppExceptions;
 using LetsMeet.Application.Common.Interfaces;
 using LetsMeet.Application.Hubs;
+using LetsMeet.Application.Message.Dtos;
 using LetsMeet.Domain.Entities;
 using LetsMeet.Domain.Enums;
 using MediatR;
@@ -79,8 +80,15 @@ public class CreateRoomCommandHandler(IDataContext context, ICurrentUser user, I
         await context.Rooms.AddAsync(room, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
         
-        //await hubContext.Groups.AddToGroupAsync(request.ConnectionId, room.Id);
-        //await hubContext.Clients.Group(room.Id).SendAsync("ReceiveMessage", "Added room");
+        await hubContext.Groups.AddToGroupAsync(request.ConnectionId, room.Id);
+        var message = new Domain.Entities.Message()
+        {
+            Content ="Utworzono konwersację",
+            RoomId = room.Id,
+            SenderUserName = "Server"
+        };
+        await context.Messages.AddAsync(message, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return new CreateRoomCommand.Result(room.Id);
     }

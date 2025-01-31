@@ -7,9 +7,13 @@ import {environment} from '../../environments/enviroment.development';
 })
 export class RoomsService {
 
+  constructor(private httpClient: HttpClient) { }
+
   getRooms() {
     return this.httpClient.get<Array<any>>(`${environment.apiUrl}/Room`);
   }
 
-  constructor(private httpClient: HttpClient) { }
+  createRoom(roomDetails: any) {
+    return this.httpClient.post(`${environment.apiUrl}/Room`, roomDetails);
+  }
 }

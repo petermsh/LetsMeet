@@ -11,9 +11,7 @@ import {HubClientService} from '../hub/hub-client.service';
 })
 export class HomeComponent {
   constructor(private hubClientService: HubClientService) {
-    console.log("start");
     this.hubClientService.startConnection();
-    console.log("stop");
   }
 
 }

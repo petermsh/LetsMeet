@@ -1,13 +1,21 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-  <div class="container-fluid">
-    <a class="navbar-brand" [routerLink]="['/home']">
-      <img src="/logo.png" alt="logo" width="40%" height="40%">
-    </a>
-    <div *ngIf="!isLoggedIn">
-      <a class="nav-link" [routerLink]="['/login']">Zaloguj się</a>
+  <div class="container-fluid d-flex align-items-center">
+    <div class="d-flex align-items-center">
+      <a class="navbar-brand" [routerLink]="['/home']">
+        <img src="/logo.png" alt="logo" width="100" height="40">
+      </a>
+      <div *ngIf="isLoggedIn">
+        <a class="nav-link ms-3" [routerLink]="['/user']">Mój profil</a>
+      </div>
     </div>
-    <div *ngIf="isLoggedIn">
-      <a class="nav-link" (click)="onLogoutClicked()">Wyloguj się</a>
+
+    <div class="ms-auto d-flex align-items-center">
+      <div *ngIf="!isLoggedIn">
+        <a class="nav-link ms-3" [routerLink]="['/login']">Zaloguj się</a>
+      </div>
+      <div *ngIf="isLoggedIn">
+        <a class="nav-link ms-3" (click)="onLogoutClicked()">Wyloguj się</a>
+      </div>
     </div>
   </div>
 </nav>

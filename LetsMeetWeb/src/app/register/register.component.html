@@ -1,0 +1,38 @@
+<div class="login">
+  <form class="form-signup">
+    <img src="/logo.png" alt="logo">
+    <label for="userName">Login <span class="required">*</span></label>
+    <input id="userName" type="text" class="form-control" placeholder="Login" name="userName" [(ngModel)]="registerDto.userName" required autofocus>
+    <div *ngIf="validationErrors.userName" class="error">{{ validationErrors.userName }}</div>
+
+    <label for="password">Hasło <span class="required">*</span></label>
+    <input id="password" type="password" class="form-control" placeholder="Hasło" name="password" [(ngModel)]="registerDto.password" required>
+    <div *ngIf="validationErrors.password" class="error">{{ validationErrors.password }}</div>
+
+    <label for="age">Wiek <span class="required">*</span></label>
+    <input id="age" type="number" class="form-control" placeholder="Wiek" name="age" [(ngModel)]="registerDto.age" required>
+    <div *ngIf="validationErrors.age" class="error">{{ validationErrors.age }}</div>
+
+    <label for="gender">Płeć <span class="required">*</span></label>
+    <select id="gender" class="form-control" name="gender" [(ngModel)]="registerDto.gender" required>
+      <option value="0">Nie chcę podawać</option>
+      <option value="1">Mężczyzna</option>
+      <option value="2">Kobieta</option>
+    </select>
+    <div *ngIf="validationErrors.gender" class="error">{{ validationErrors.gender }}</div>
+
+    <label for="city">Miasto</label>
+    <input id="city" type="text" class="form-control" placeholder="Miasto" name="city" [(ngModel)]="registerDto.city">
+    <div *ngIf="validationErrors.city" class="error">{{ validationErrors.city }}</div>
+
+    <label for="university">Uczelnia</label>
+    <input id="university" type="text" class="form-control" placeholder="Uczelnia" name="university" [(ngModel)]="registerDto.university">
+    <div *ngIf="validationErrors.university" class="error">{{ validationErrors.university }}</div>
+
+    <label for="major">Kierunek</label>
+    <input id="major" type="text" class="form-control" placeholder="Kierunek" name="major" [(ngModel)]="registerDto.major">
+    <div *ngIf="validationErrors.major" class="error">{{ validationErrors.major }}</div>
+
+    <button class="btn btn-primary w-100" type="submit" (click)="register()">Zarejestruj się</button>
+  </form>
+</div>

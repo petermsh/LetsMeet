@@ -84,4 +84,9 @@ public class ChatHub(UserManager<AppUser> userManager, ISender sender, ICurrentU
         await Clients.Group(sendMessage.RoomId).SendAsync("ReceiveMessage", messageDto);
     }
     
+    public async Task<string> GetConnectionId()
+    {
+        return await Task.FromResult(Context.ConnectionId);
+    }
+    
 }

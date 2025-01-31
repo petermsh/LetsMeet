@@ -1,5 +1,6 @@
 ﻿using LetsMeet.Application.User.Commands.ChangeStatus;
 using LetsMeet.Application.User.Commands.UpdateUser;
+using LetsMeet.Application.User.Queries.GetUserByName;
 using LetsMeet.Application.User.Queries.GetUserInfo;
 using LetsMeet.Domain.Entities;
 using MediatR;
@@ -20,6 +21,17 @@ public class UserController(ISender sender) : ControllerBase
     public async Task<IActionResult> GetUserInfo()
     {
         var result = await sender.Send(new GetUserInfoQuery());
+        return Ok(result);
+    }
+    
+    [HttpGet("{userName}")]
+    [Authorize]
+    [EndpointSummary("Get user info by name")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetUserByName(string userName)
+    {
+        var result = await sender.Send(new GetUserByNameQuery(userName));
         return Ok(result);
     }
 

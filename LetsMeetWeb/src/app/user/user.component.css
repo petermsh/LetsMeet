@@ -1,0 +1,36 @@
+.user-profile-box {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-box h4 {
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.form-control {
+  border-radius: 5px;
+}
+
+.btn-primary {
+  margin-top: 15px;
+}
+
+.success-snackbar {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.error-snackbar {
+  background-color: #f44336;
+  color: #fff;
+}

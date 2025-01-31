@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {AuthorizationService} from '../authorization/authorization.service';
+import {AuthorizationService, RegisterDto} from '../authorization/authorization.service';
 import {HubClientService} from '../hub/hub-client.service';
 
 @Component({
@@ -9,10 +9,11 @@ import {HubClientService} from '../hub/hub-client.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+
   userName: any;
   password: any;
 
-  constructor(private authorizationService: AuthorizationService, private hubClientService: HubClientService) {
+  constructor(private authorizationService: AuthorizationService) {
   }
 
   async login() {

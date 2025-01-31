@@ -2,7 +2,7 @@
   id?: string;
   roomId: string;
   content: string;
-  date?: string;
+  date: string;
   from?: string;
   isFromUser?: boolean;
 }

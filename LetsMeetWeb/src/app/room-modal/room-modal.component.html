@@ -1,0 +1,57 @@
+<div class="modal" id="createRoomModal" tabindex="-1" aria-labelledby="createRoomModalLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createRoomModalLabel">Nowy chat</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="university" class="form-label">Uczelnia</label>
+            <input
+              type="text"
+              class="form-control"
+              id="university"
+              [(ngModel)]="roomDetails.university"
+              name="university">
+          </div>
+          <div class="mb-3">
+            <label for="city" class="form-label">Miasto</label>
+            <input
+              type="text"
+              class="form-control"
+              id="city"
+              [(ngModel)]="roomDetails.city"
+              name="city">
+          </div>
+          <div class="mb-3">
+            <label for="major" class="form-label">Kierunek</label>
+            <input
+              type="text"
+              class="form-control"
+              id="major"
+              [(ngModel)]="roomDetails.major"
+              name="major">
+          </div>
+          <div class="mb-3">
+            <label for="gender" class="form-label">Płeć</label>
+            <select
+              class="form-select"
+              id="gender"
+              [(ngModel)]="roomDetails.gender"
+              name="gender">
+              <option value="0">Wszyscy</option>
+              <option value="1">Mężczyzna</option>
+              <option value="2">Kobieta</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Anuluj</button>
+        <button type="button" class="btn btn-primary" (click)="confirmRoom()">Utwórz</button>
+      </div>
+    </div>
+  </div>
+</div>

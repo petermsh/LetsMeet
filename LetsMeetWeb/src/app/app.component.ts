@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter} from '@angular/core';
 import { AuthorizationService } from './authorization/authorization.service';
 
 @Component({
@@ -8,6 +8,8 @@ import { AuthorizationService } from './authorization/authorization.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  isLoginView: boolean = true;
+  toggleViewEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   get isLoggedIn() {
     return this.authorizationService.isLoggedIn;
@@ -18,5 +20,10 @@ export class AppComponent {
   }
 
   constructor(private authorizationService: AuthorizationService) {
+    this.toggleViewEvent.subscribe(value => this.isLoginView = value);
+  }
+
+  toggleView(value: boolean) {
+    this.isLoginView = value;
   }
 }

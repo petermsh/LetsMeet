@@ -1,7 +1,7 @@
 <div class="container">
-  <div class="row">
+  <div class="row d-flex justify-content-between">
     <!-- Lista pokoi -->
-    <div class="col-sm-4">
+    <div class="col-md-3 col-sm-4">
       <div class="list-group">
         <h4>Wiadomości</h4>
         <div
@@ -17,20 +17,25 @@
           </div>
         </div>
       </div>
+      <button class="btn btn-primary w-100 mt-2" (click)="openModal()">Nowy chat</button>
     </div>
 
     <!-- Wiadomości dla wybranego pokoju -->
-    <div class="col-sm-8 chat-box" *ngIf="selectedRoom">
+    <div class="col-md-6 col-sm-8 chat-box" *ngIf="selectedRoom">
 
       <h5>{{ selectedRoom.roomName }}</h5>
       <div class="messages-container">
         <div
           class="message-item"
           *ngFor="let message of messages"
-          [ngClass]="{ 'from-user': message.isFromUser, 'to-user': !message.isFromUser }">
+          [ngClass]="{
+            'server-message': isServerMessage(message),
+            'from-user': message.isFromUser,
+            'to-user': !message.isFromUser && !isServerMessage(message)
+          }">
           <div class="message-content">
             <p>{{ message.content }}</p>
-            <span class="message-timestamp">{{ message.date | date:'short' }}</span>
+            <span class="message-timestamp" *ngIf="!isServerMessage(message)">{{ formatMessageDate( message.date) }}</span>
           </div>
         </div>
       </div>
@@ -47,7 +52,23 @@
           <button class="btn btn-primary" type="submit">Wyślij</button>
         </div>
       </form>
+    </div>
 
+    <div class="col-md-3 col-sm-12 user-info-box" *ngIf="selectedUser">
+      <h5>{{ selectedRoom.roomName }}</h5>
+      <p><strong>Bio:</strong> {{ selectedUser.bio }}</p>
+      <p><strong>Wiek:</strong> {{ selectedUser.age }}</p>
+      <p><strong>Płeć:</strong> {{ selectedUser.gender }}</p>
+      <p><strong>Miasto:</strong> {{ selectedUser.city }}</p>
+      <p><strong>Uniwersytet:</strong> {{ selectedUser.university }}</p>
+      <p><strong>Kierunek:</strong> {{ selectedUser.major }}</p>
     </div>
   </div>
 </div>
+
+<app-room-modal
+  *ngIf="isModalOpen"
+  (confirm)="handleConfirmRoom($event)"
+  (close)="closeModal()">
+</app-room-modal>
+

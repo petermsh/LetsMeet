@@ -20,10 +20,6 @@ export class HeaderComponent {
     this.logout.emit();
   }
 
-  async startConnection() {
-    await this.hubClientService.startConnection();
-  }
-
-  constructor(private authorizationService: AuthorizationService, private hubClientService: HubClientService) {
+  constructor(private authorizationService: AuthorizationService) {
   }
 }

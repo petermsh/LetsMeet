@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/enviroment.development';
 import {HubClientService} from '../hub/hub-client.service';
+import {throwError} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,6 @@ export class AuthorizationService {
         },
         error: error => console.error(error)
       });
-    console.log("login");
   }
 
   logout() {
@@ -62,4 +62,28 @@ export class AuthorizationService {
       }
     }
   }
+
+  async register(command: RegisterDto): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.httpClient.post(`${environment.apiUrl}/Auth/register`, command)
+        .subscribe({
+          next: response => {
+            resolve();
+          },
+          error: error => {
+            reject(error);
+          }
+        });
+    });
+  }
+}
+
+export interface RegisterDto {
+    userName: string,
+    password: string,
+    age: number,
+    gender: number,
+    city: string,
+    university: string,
+    major: string
 }
