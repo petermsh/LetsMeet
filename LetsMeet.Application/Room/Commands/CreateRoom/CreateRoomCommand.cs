@@ -1,7 +1,6 @@
 ﻿using LetsMeet.Application.Common.Exceptions.AppExceptions;
 using LetsMeet.Application.Common.Interfaces;
 using LetsMeet.Application.Hubs;
-using LetsMeet.Application.Message.Dtos;
 using LetsMeet.Domain.Entities;
 using LetsMeet.Domain.Enums;
 using MediatR;
@@ -37,13 +36,13 @@ public class CreateRoomCommandHandler(IDataContext context, ICurrentUser user, I
             filteredUsers = filteredUsers.Where(x => x.Gender == request.Gender);
 
         if (!string.IsNullOrEmpty(request.City))
-            filteredUsers = filteredUsers.Where(x => x.City == request.City);
+            filteredUsers = filteredUsers.Where(x => x.City.ToLower() == request.City.ToLower());
 
         if (!string.IsNullOrEmpty(request.University))
-            filteredUsers = filteredUsers.Where(x => x.University == request.University);
+            filteredUsers = filteredUsers.Where(x => x.University != null && x.University.ToLower() == request.University.ToLower());
 
         if (!string.IsNullOrEmpty(request.Major))
-            filteredUsers = filteredUsers.Where(x => x.Major == request.Major);
+            filteredUsers = filteredUsers.Where(x => x.Major != null && x.Major.ToLower() == request.Major.ToLower());
 
         if (!await filteredUsers.AnyAsync(cancellationToken))
         { 
@@ -54,7 +53,7 @@ public class CreateRoomCommandHandler(IDataContext context, ICurrentUser user, I
         
         do
         {
-            var index = rng.Next(usersList.Count());
+            var index = rng.Next(usersList.Count);
             secondUser = usersList[index];
 
             var existingRoom = await context.Rooms
