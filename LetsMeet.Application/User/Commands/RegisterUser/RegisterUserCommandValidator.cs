@@ -24,15 +24,12 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 
         RuleFor(x => x.City)
             .NotEmpty()
-            .MinimumLength(3)
             .MaximumLength(50);
 
         RuleFor(x => x.University)
-            .MinimumLength(3)
             .MaximumLength(50);
 
         RuleFor(x => x.Major)
-            .MinimumLength(3)
             .MaximumLength(50);
     }
 }

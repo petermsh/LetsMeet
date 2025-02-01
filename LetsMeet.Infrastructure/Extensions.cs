@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -91,7 +92,7 @@ public static class Extensions
 
     private static IServiceCollection SetUpUserAndAuth(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddIdentity<AppUser, IdentityRole<Guid>>()
+        services.AddIdentity<AppUser, IdentityRole<Guid>>(opt => opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ąćęłńóśźżĄĆĘŁŃÓŚŹŻ")
             .AddEntityFrameworkStores<DataContext>()
             .AddDefaultTokenProviders();
 
