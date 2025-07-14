@@ -1,24 +1,35 @@
-#use: docker compose up -d
-
 version: '3'
 
 services:
   postgres:
-    container_name: letsmeet_backend_db
-    image: postgres:16.3-alpine3.19
+    image: postgres
     restart: always
     ports:
       - "5432:5432"
-    volumes:
-      - postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=letsmeet
+      - POSTGRES_DB=LetsMeet
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=!23Haslo
 
-networks:
-  bridge:
-
-
-volumes:
-  postgres:
+  backend:
+    image: letsmeet
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5010:5010"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Username=postgres;Password=!23Haslo;Database=LetsMeet"
+    depends_on:
+      - postgres
+        
+  frontend:
+    image: letsmeet-web
+    build:
+      context: ./LetsMeetWeb
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80" 
+    depends_on:
+      - backend

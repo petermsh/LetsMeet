@@ -58,7 +58,7 @@
       <h5>{{ selectedRoom.roomName }}</h5>
       <p><strong>Bio:</strong> {{ selectedUser.bio }}</p>
       <p><strong>Wiek:</strong> {{ selectedUser.age }}</p>
-      <p><strong>Płeć:</strong> {{ selectedUser.gender }}</p>
+      <p><strong>Płeć:</strong> {{ selectedUser.gender != null ? (selectedUser.gender == "Female" ? "Kobieta" : "Mężczyzna") : selectedUser.gender}}</p>
       <p><strong>Miasto:</strong> {{ selectedUser.city }}</p>
       <p><strong>Uniwersytet:</strong> {{ selectedUser.university }}</p>
       <p><strong>Kierunek:</strong> {{ selectedUser.major }}</p>
